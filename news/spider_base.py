@@ -159,9 +159,7 @@ class SpiderBase(object):
             return (time.strftime("%Y-%m-%d %H:%M:%S"), int(time.time()))
 
     def do(self):
-        # self._fail_count=20
         self.run()
-        return self.count
 
     # retries:错误重连次数
     # pass_status_code:正确status_code会返回'ok',response

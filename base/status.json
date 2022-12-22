@@ -1,18 +1,1 @@
-[
-    {
-        "id":1,
-        "name":"测试",
-        "status":2,
-        "spider":"test",
-        "config":"{}",
-        "owner":"wujiefeng"
-    },
-    {
-        "id":1,
-        "name":"测试1",
-        "status":2,
-        "spider":"test1",
-        "config":"{}",
-        "owner":"wujiefeng"
-    }
-]
+[{"id": 1, "name": "\u6d4b\u8bd5", "status": 2, "spider": "test", "config": "{}", "owner": "wujiefeng"}, {"id": 2, "name": "\u6d4b\u8bd51", "status": 2, "spider": "test1", "config": "{}", "owner": "wujiefeng"}]

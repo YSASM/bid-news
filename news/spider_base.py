@@ -4,6 +4,7 @@ from service.message import MessageService
 from config.config import Config
 import logging
 from bs4 import BeautifulSoup
+from model.bid_news import NewsDao
 import time
 import re
 from base.http_wrapper import HttpWrapper
@@ -42,57 +43,27 @@ TargetType = {
 
 
 class SpiderBase(object):
-    def __init__(self):
+    def __init__(self,arg):
+        self.arg = arg
         self.count = 0
+        self.config = arg['config']
+        self.nd = NewsDao()
 
-
-    def add(self, info):
-        info.src_id = self.source.id
-        # &lt;font color='#CC00FF'&gt;[公 开招标]&lt;/font&gt;八五九分公司2022 年粮食管护设施项目三标段中标候选人公 示
-        # 需要两遍BeautifulSoup去掉
-        info.origin_title = BeautifulSoup(info.origin_title, 'html.parser').text
-        info.origin_title = self.replace_warpper(BeautifulSoup(info.origin_title, 'html.parser').text)
-        info.origin_content = self.replace_warpper(info.origin_content,list_replace=['\n','\r','\t','\xa0',' '])
-        if info.type_id == 0:
-            if info.origin_type != "":
-                info.type_id = self.match_type(type_=info.origin_type, title=info.origin_title)
-            else:
-                info.type_id, info.origin_type = self.match_type(title=info.origin_title, back_name=True)
-        info = self.match_region(info)
-        if info.issue_time == 0:
-            info.issue_time = self.format_timestamp(info.origin_issue_time)
-
-        if info.issue_time > int(time.time()):
-            info.issue_time = int(time.time())
-        info = self.extract_attachment_from_content(info)
-        info = self.add_title_md5(info)
-        if self.is_exist_same(info):
-            return True
-        if info.project_amount >= 10000000000:
-            info.wash_level = f"{info.src_id}_amount"
-        if not info.origin_region and not info.city_id:
-            info.wash_level = f"{info.src_id}_region"
-        back_match_zbr = self.fun_match_zbr(info)
-        if not back_match_zbr:
-            info.company_name = ''
-        else:
-            info = back_match_zbr
+    def add(self, news):
         try:
-            # 入库前对所有 info 的 content 进行转义处理
-            info.origin_content = html.unescape(info.origin_content)
-            # 入库前检查 入库的字段的空白字符是否去掉 的格式
-            info = self.clear_blank_string(info)
-            self._info_dao.add(info)
+            self.nd.add(news)
             self.count += 1
         except Exception as e:
-            logging.error('[%s] add info fail %s', self.source.spider, str(e))
+            logging.error('[%s] add news fail %s', self.source.spider, str(e))
+
+    def exist(self,news):
+        return self.nd.exist(news)
 
     def send_alarm(self, title, msg):
         message = []
         message.append("【%s】【%s】" % (str(title), Config.env()))
-        message.append("网站名称：%s" % self.source.name)
-        message.append("网站地址：%s" % self.source.url)
-        message.append("蜘蛛类别：%s" % self.source.spider)
+        message.append("网站名称：%s" % self.arg['name'])
+        message.append("蜘蛛类别：%s" % self.arg['spider'])
         message.append("发送时间：%s" % str(time.strftime("%Y-%m-%d %H:%M:%S")))
         message.append(str(msg))
         MessageService.send_text("\n".join(message), self.source.owner)

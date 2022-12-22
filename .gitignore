@@ -1,14 +1,6 @@
 .idea
 .venv
 env
-test.py
 log
 __pycache__
 .vscode
-test.html
-cut_img
-image_store
-img_spider_library
-image_store_nmg
-img_spider_library_nmg
-get_train_img_main.py

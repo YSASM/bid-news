@@ -28,18 +28,7 @@ HEAD = 'head'
 PUT = 'put'
 PATCH = 'patch'
 DELETE = 'delete'
-TargetType = {
-    '.doc': 'word',
-    '.docx': 'word',
-    '.pdf': 'pdf',
-    '.ppt': 'ppt',
-    '.xls': 'excel',
-    '.xlsx': 'excel',
-    '.txt': 'text',
-    '.jpg': 'image',
-    '.png': 'image',
-    '.jpeg': 'image',
-}
+
 
 
 class SpiderBase(object):
@@ -54,7 +43,7 @@ class SpiderBase(object):
             self.nd.add(news)
             self.count += 1
         except Exception as e:
-            logging.error('[%s] add news fail %s', self.source.spider, str(e))
+            logging.error('[%s] add news fail %s', self.arg['spider'], str(e))
 
     def exist(self,news):
         return self.nd.exist(news)
@@ -66,7 +55,7 @@ class SpiderBase(object):
         message.append("蜘蛛类别：%s" % self.arg['spider'])
         message.append("发送时间：%s" % str(time.strftime("%Y-%m-%d %H:%M:%S")))
         message.append(str(msg))
-        MessageService.send_text("\n".join(message), self.source.owner)
+        MessageService.send_text("\n".join(message), self.arg['owner'])
 
     # 把时间统一变成%Y-%m-%d %H-%M-%S的格式
     def _tobe_time(self, flage, s: str):
@@ -192,11 +181,11 @@ class SpiderBase(object):
         if back_code == 'pass':
             return None
         elif back_code == 'error':
-            logging.warning(f"【{self.source.name}】【{self.source.spider}】【网络超时】 ：url : {url},error:{back_content}")
+            logging.warning(f"【{self.arg['name']}】【{self.arg['spider']}】【网络超时】 ：url : {url},error:{back_content}")
             return None
         elif back_code == 'bad':
             # self.add_fail('网络错误', back_content)
-            logging.warning(f"【{self.source.name}】【{self.source.spider}】【网络错误】 ：url : {url},error:{back_content}")
+            logging.warning(f"【{self.arg['name']}】【{self.arg['spider']}】【网络错误】 ：url : {url},error:{back_content}")
             return None
         elif back_code == 'ok':
             return back_content

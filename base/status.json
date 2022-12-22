@@ -1,0 +1,18 @@
+[
+    {
+        "id":1,
+        "name":"测试",
+        "status":2,
+        "spider":"test",
+        "config":"{}",
+        "owner":"wujiefeng"
+    },
+    {
+        "id":1,
+        "name":"测试1",
+        "status":2,
+        "spider":"test1",
+        "config":"{}",
+        "owner":"wujiefeng"
+    }
+]

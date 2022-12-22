@@ -1,0 +1,8 @@
+{
+  "db": "mysql+mysqlconnector://bid:kZXfNiS54bH7Y4NB@192.168.13.200:3306/bid_test",
+  "admin": "jianghuanhuan",
+  "sender": "1000006",
+  "statistic": "0",
+  "cjyaccount": "qiansan",
+  "cjypassword": "sange666"
+}

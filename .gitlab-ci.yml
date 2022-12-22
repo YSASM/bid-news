@@ -1,0 +1,19 @@
+stages:
+  - image
+
+image_job:
+  stage: image
+  image: docker:latest
+  only:
+    - tags
+
+  script:
+    - mkdir ~/.docker
+    - echo "$DOCKER_AUTH_CONFIG" > ~/.docker/config.json
+    - docker info
+    - docker build -t "registry.cn-shanghai.aliyuncs.com/yuanlue/bid-spider:${CI_COMMIT_REF_NAME}" .
+    - docker push "registry.cn-shanghai.aliyuncs.com/yuanlue/bid-spider:$CI_COMMIT_REF_NAME"
+    - docker rmi "registry.cn-shanghai.aliyuncs.com/yuanlue/bid-spider:$CI_COMMIT_REF_NAME"
+
+  tags:
+    - qq-runner

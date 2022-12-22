@@ -3,7 +3,7 @@ from threading import Thread
 import time
 import traceback
 import news
-from base import get_status,get_config,get_name,async_call,get_owner,stop_thread
+from base import get_status,get_config,get_name,async_call,get_owner,stop_thread,get_id
 from config.config import Config
 from .message import MessageService
 
@@ -54,8 +54,7 @@ class Worker(object):
     def run(self):
         try:
             logging.info("[%s] start worker ...", self.spider)
-            config = get_config(self.spider)
-            self.watch_stop({"name":self.name,"spider":self.spider,"config":config})
+            self.watch_stop({"id":get_id(self.spider),"name":self.name,"spider":self.spider,"config":get_config(self.spider),"owner":self.owner})
         except:
             exp = traceback.format_exc()
             self.send_fail(exp)

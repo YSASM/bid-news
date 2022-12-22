@@ -6,7 +6,6 @@ import json
 class Config(object):
 
     cfg = {}
-
     @classmethod
     def env(cls):
         return os.environ.get("ENV", "test")
@@ -32,6 +31,13 @@ class Config(object):
             cls.cfg = json.loads(cfg)
         except Exception as e:
             logging.error("config is load error: %s", str(e))
+    @classmethod
+    def load_status(cls, env):
+        if os.path.exists("./base/status.%s.json" % str(env)):
+            file = "./base/status.%s.json" % str(env)
+        elif os.path.exists("../base/status.%s.json" % str(env)):
+            file = "../base/status.%s.json" % str(env)
+        return file
 
     @classmethod
     def get(cls):

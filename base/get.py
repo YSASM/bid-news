@@ -1,26 +1,50 @@
-import json,logging
+import json
+import logging
+from config.config import Config
+path = Config.load_status(Config.env())
+
+def get(fn):
+    def _get(spider):
+        f = open(path, 'r', encoding='utf-8').read()
+        try:
+            spiders = json.loads(f)
+            for temp in spiders:
+                if temp['spider'] == spider:
+                    return fn(temp)
+        except:
+            logging.error('status.json error!')
+    return _get
+
+
+@get
 def get_status(spider):
-    f = open('base/status.json','r',encoding='utf-8').read()
-    try:
-        spiders = json.loads(f)
-        for temp in spiders:
-            if temp['spider'] == spider:
-                return temp['status']
-    except:
-        logging.error('status.json error!')
-    return None
+    '''
+    获取开关状态
+    '''
+    return spider['status']
+
+
+@get
 def get_config(spider):
-    f = open('base/status.json','r',encoding='utf-8').read()
-    try:
-        spiders = json.loads(f)
-        for temp in spiders:
-            if temp['spider'] == spider:
-                return json.loads(temp['config'])
-    except:
-        logging.error('status.json error!')
-    return None
+    '''
+    获取配置信息
+    '''
+    return json.loads(spider['config'])
+
+
+@get
+def get_id(spider):
+    '''
+    获取id
+    '''
+    return spider['id']
+
+
 def get_all():
-    f = open('base/status.json','r',encoding='utf-8').read()
+    '''
+    获取所有spider
+    '''
+    f = open(path, 'r', encoding='utf-8').read()
     try:
         spiders = json.loads(f)
         l = []
@@ -29,8 +53,13 @@ def get_all():
     except:
         logging.error('status.json error!')
     return l
+
+
 def get_all_id():
-    f = open('base/status.json','r',encoding='utf-8').read()
+    '''
+    获取所有id
+    '''
+    f = open(path, 'r', encoding='utf-8').read()
     try:
         spiders = json.loads(f)
         l = []
@@ -39,28 +68,29 @@ def get_all_id():
     except:
         logging.error('status.json error!')
     return l
+
+
+@get
 def get_name(spider):
-    f = open('base/status.json','r',encoding='utf-8').read()
-    try:
-        spiders = json.loads(f)
-        for temp in spiders:
-            if temp['spider'] == spider:
-                return temp['name']
-    except:
-        logging.error('status.json error!')
-    return None
+    '''
+    获取名字
+    '''
+    return spider['name']
+
+
+@get
 def get_owner(spider):
-    f = open('base/status.json','r',encoding='utf-8').read()
-    try:
-        spiders = json.loads(f)
-        for temp in spiders:
-            if temp['spider'] == spider:
-                return temp['owner']
-    except:
-        logging.error('status.json error!')
-    return None
+    '''
+    获取负责人
+    '''
+    return spider['owner']
+
+
 def write(source):
-    f = open('base/status.json','r',encoding='utf-8').read()
+    '''
+    从数据库更新信息
+    '''
+    f = open(path, 'r', encoding='utf-8').read()
     try:
         spiders = json.loads(f)
         flage = False
@@ -87,7 +117,7 @@ def write(source):
         logging.error('status.json error!')
     if flage:
         try:
-            open('base/status.json','w').write(json.dumps(spiders))
+            open(path, 'w').write(json.dumps(spiders))
             return True
         except:
             logging.error('update status.json error!')

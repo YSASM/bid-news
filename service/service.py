@@ -19,10 +19,10 @@ class Service(object):
         message.append(exp)
         MessageService.send_text("\n".join(message), self.owner)
     def run(self):
-        self.owner = get_owner(spider)
         try:
             spiders = get_all()
             for spider in spiders:
+                self.owner = get_owner(spider)
                 start_work(spider,self.owner)
         except:
             exp = traceback.format_exc()

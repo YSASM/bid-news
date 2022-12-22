@@ -15,28 +15,30 @@ class Worker(object):
         self.th = None
 
     @async_call
-    def watch_stop(self,spider,arg):
+    def watch_stop(self,arg):
         while True:
-            status = get_status(spider)
+            status = get_status(self.spider)
             if status == 2:
                 if not self.th:
                     time.sleep(1)
                     continue
                 stop_thread(self.th)
-                logging.info('%s stop...' % spider)
+                logging.info('%s stop...' % self.spider)
                 self.th = None
             if status == 1:
                 if self.th:
                     time.sleep(1)
                     continue
-                logging.info('%s start...' % spider)
-                self.start_spider(spider,arg)
+                logging.info('%s start...' % self.spider)
+                self.start_spider(self.spider,arg)
             time.sleep(1)
     def start_spider(self,spider,arg):
         try:
             spider = getattr(getattr(news,spider),'Main')(arg)
         except:
-            logging.error("%s can't find!" % spider)
+            exp = traceback.format_exc()
+            logging.error("%s Error:%s" % (spider,exp))
+            self.send_fail(exp)
             return None
         self.th = Thread(target=spider.do)
         self.th.start()
@@ -53,7 +55,7 @@ class Worker(object):
         try:
             logging.info("[%s] start worker ...", self.spider)
             config = get_config(self.spider)
-            self.watch_stop(self.spider,{"name":self.name,"spider":self.spider,"config":config})
+            self.watch_stop({"name":self.name,"spider":self.spider,"config":config})
         except:
             exp = traceback.format_exc()
             self.send_fail(exp)

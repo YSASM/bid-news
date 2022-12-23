@@ -46,7 +46,8 @@ class SpiderBase(object):
         news.create_time = int(time.time())
         try:
             self.nd.add(news)
-            self.count += 1
+            if self.arg['spider']!='other':
+                self.count += 1
         except Exception as e:
             logging.error('[%s] add news fail %s', self.arg['spider'], str(e))
 

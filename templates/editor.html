@@ -1,0 +1,128 @@
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+  <title>Editor</title>
+  <script src="/static/monaco-editor/min/vs/loader.js"></script>
+  <link rel="stylesheet" href="/static/css/layui.css">
+  <script src="/static/layui.js"></script>
+  <style>
+    #editor{
+      height: 600px;
+      border: solid;
+      border-width: 0.1px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-card" style="
+        /* background:#f00;  */
+        width:1500px; 
+        height:800px; 
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+        border-radius: 18px;
+        border: 0.1px solid gainsboro;
+        box-shadow: 0 0 10px 3px gainsboro;">
+        <div style="text-align:center;font-size: 20px;margin-top: 60px;">手动添加</div>
+        <form action="" method="post" class="layui-form" style="width: 300px;margin-top: 25px;margin-left: -35px;">
+          <div class="layui-container" style="margin-left: 100px">  
+            <div class="layui-row">
+              <div class="layui-col-md3">
+                <div class="layui-form-item">
+                  <label class="layui-form-label">原始标题</label>
+                  <div class="layui-input-block">
+                      <input type="text" name="origin_title" required lay-verify="required" placeholder="请输入"
+                          autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="layui-form-label">原始链接</label>
+                  <div class="layui-input-block">
+                      <input type="text" name="origin_url" required lay-verify="required" placeholder="请输入"
+                          autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="layui-form-label">发布主体</label>
+                  <div class="layui-input-block">
+                      <input type="text" name="origin_subject" required lay-verify="required" placeholder="请输入"
+                          autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="layui-form-label">发布时间</label>
+                  <div class="layui-input-block">
+                      <input type="text" name="origin_issue_time" required lay-verify="required" placeholder="请输入"
+                          autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <label class="layui-form-label">资讯类型</label>
+                  <div class="layui-input-block">
+                      <input type="text" name="type_name" required lay-verify="required" placeholder="请输入"
+                          autocomplete="off" class="layui-input">
+                  </div>
+                </div>
+                <div class="layui-form-item">
+                  <div class="layui-input-block">
+                      <button id="submit" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                  </div>
+              </div>
+              </div>
+                <div class="layui-col-md9">
+                  <div class="layui-form-item">
+                    <label class="layui-form-label">原始内容</label>
+                    <div class="layui-input-block">
+                      <div id="editor"></div>
+                      <input hidden="hidden" id="origin_content" type="text" name="origin_content" required lay-verify="required" autocomplete="off" value="12">
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <script>
+          require.config({ paths: { 'vs': 'static/monaco-editor/min/vs' }});
+          require(['vs/editor/editor.main'], 
+            function() {
+              var editor = monaco.editor.create(document.getElementById('editor'), {
+                language: 'html'
+              });
+              varsubmit=document.getElementById('submit')
+              submit.onclick = function(){
+                document.getElementById('origin_content').value = editor.getValue()
+              }
+              layui.use('form', function () {
+                $ = layui.jquery 
+                var form = layui.form
+                form.on('submit(formDemo)', function(data){
+                    $.ajax({
+                        type: "post",
+                        url: "/",
+                        data: data.field,
+                        cache: false,
+                        async: true,
+                        success: function () {
+                          layer.msg('插入成功', { icon: 1, offset: "t", time:2000 });
+                          window.location.replace('/')
+                        },
+                        error: function () {
+                            layer.msg('插入失败', { icon: 2, offset: "t", time:2000 });
+                        }
+                    });
+                  return false;
+                });
+              });
+            }
+          );
+        </script>
+
+    </div>
+</body>

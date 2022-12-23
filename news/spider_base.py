@@ -1,3 +1,4 @@
+import hashlib
 import html
 from datetime import datetime
 from service.message import MessageService
@@ -34,11 +35,15 @@ DELETE = 'delete'
 class SpiderBase(object):
     def __init__(self,arg):
         self.arg = arg
-        self.count = 0
-        self.config = arg['config']
-        self.nd = NewsDao()
+        if arg['spider']!='other':
+            self.count = 0
+            self.config = arg['config']
+            self.nd = NewsDao()
 
     def add(self, news):
+        news = self.add_title_md5(news)
+        news.issue_time = self.format_timestamp(news.origin_issue_time)
+        news.create_time = int(time.time())
         try:
             self.nd.add(news)
             self.count += 1
@@ -46,7 +51,7 @@ class SpiderBase(object):
             logging.error('[%s] add news fail %s', self.arg['spider'], str(e))
 
     def exist(self,news):
-        return self.nd.exist(news)
+        return self.nd.exist(news.origin_url)
 
     def send_alarm(self, title, msg):
         message = []
@@ -56,7 +61,19 @@ class SpiderBase(object):
         message.append("发送时间：%s" % str(time.strftime("%Y-%m-%d %H:%M:%S")))
         message.append(str(msg))
         MessageService.send_text("\n".join(message), self.arg['owner'])
-
+    def add_title_md5(self, info):
+        """
+        将文章title去掉空白字符，然后进行md5运算
+        """
+        if not info.origin_title:
+            logging.error(f'[{self.arg["spider"]}] title is empty')
+            return info
+        if info.origin_title_md5 != '': return info
+        origin_title = info.origin_title
+        origin_title = re.sub('[ \t\n\r\f\v]+', '', origin_title)
+        hash_md5_title = hashlib.md5(origin_title.encode('utf-8')).hexdigest()
+        info.origin_title_md5 = hash_md5_title
+        return info
     # 把时间统一变成%Y-%m-%d %H-%M-%S的格式
     def _tobe_time(self, flage, s: str):
         back_str = ''
@@ -75,7 +92,7 @@ class SpiderBase(object):
         if l == 2:
             return s + (':%d' % now.second)
         return s
-
+    
     # wash:是否清洗时间默认为False只会返回时间戳，为True会返回两个值(时间，时间戳)
     # 比如传进:
     #   timestr = '发布时间：2022-01-01 12:00 【打印】【退出】'

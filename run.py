@@ -59,7 +59,7 @@ if __name__ == "__main__":
     logger.addHandler(console_handler)
 
     logging.info("start bid-news ....")
-    start_watcher()
     start_service()
+    start_watcher()
     # editor.run(debug=True)
     

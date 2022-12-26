@@ -9,16 +9,17 @@ from config.config import Config
 from .message import MessageService
 
 class Worker(object):
-    def __init__(self,spider,owner):
+    def __init__(self,spider):
         self.spider = spider
         self.name = get_name(spider)
-        self.owner = owner
+        self.owner = get_owner(self.spider)
         self.th = None
 
     @async_call
     def watch_stop(self,arg):
         while True:
             status = get_status(self.spider)
+            self.owner = get_owner(self.spider)
             if status == 2:
                 if not self.th:
                     time.sleep(1)

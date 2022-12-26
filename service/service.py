@@ -6,8 +6,8 @@ from .message import MessageService
 from .worker import Worker
 
 @async_call
-def start_work(spider,owner):
-    worker = Worker(spider,owner)
+def start_work(spider):
+    worker = Worker(spider)
     worker.run()
 class Service(object):
     def __init__(self):
@@ -22,8 +22,7 @@ class Service(object):
         try:
             spiders = get_all()
             for spider in spiders:
-                self.owner = get_owner(spider)
-                start_work(spider,self.owner)
+                start_work(spider)
         except:
             exp = traceback.format_exc()
             self.send_fail(exp)

@@ -23,12 +23,14 @@ class Worker(object):
                     time.sleep(1)
                     continue
                 stop_thread(self.th)
+                MessageService.send_text('%s 停止'%self.spider, self.owner)
                 logging.info('%s stop...' % self.spider)
                 self.th = None
             if status == 1:
                 if self.th:
                     time.sleep(1)
                     continue
+                MessageService.send_text('%s 启动'%self.spider, self.owner)
                 logging.info('%s start...' % self.spider)
                 self.start_spider(self.spider,arg)
             time.sleep(1)

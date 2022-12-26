@@ -15,6 +15,14 @@ class Main(SpiderBase):
         'Origin': 'http://www.bidizhaobiao.com',
         'Connection': 'close',
     }
+    type_id_list = {
+            '行业新闻':5,
+            '招标热点':5,
+            '招标知识':5,
+            '政策法规':6,
+            '招采排行榜':6,
+            '公司动态':6
+        }
     content_list = ['column_list_content','content']
     def write_db(self, content,type_name):
         l = len(content)
@@ -45,6 +53,7 @@ class Main(SpiderBase):
                 # 填入原始类型
                 news.type_name = type_name
                 news.origin_subject = '比地招标网'
+                news.type_id = self.type_id_list[type_name]
                 self.add(news)
                 l-=1
                 time.sleep(10)

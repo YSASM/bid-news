@@ -60,7 +60,10 @@ class Main(SpiderBase):
                 'https://cis.sohu.com/cisv4/feeds', headers=self.headers, data=info.get("data"))
             data = response.json()
             infos = data.get(info.get("key")).get("data")
+            count = 0
             for info in infos:
+                if count >= 10:
+                    break
                 news = News()
                 title = info.get("resourceData").get("contentData").get("title")
                 # 标题
@@ -70,6 +73,7 @@ class Main(SpiderBase):
                 url = "https://www.sohu.com" + url
                 news.origin_url = str(url)
                 if self.exist(news):
+                    count+=1
                     continue
                 # 主体
                 news.origin_subject = "搜狐"

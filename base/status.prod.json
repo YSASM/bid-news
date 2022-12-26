@@ -6,5 +6,13 @@
         "spider": "news_www_bidizhaobiao_com",
         "config": "{}",
         "owner": "wujiefeng"
+    },
+    {
+        "id": 2,
+        "name": "搜狐",
+        "status": 1,
+        "spider": "news_cis_sohu_com",
+        "config": "{}",
+        "owner": "jianghuanhuan"
     }
 ]

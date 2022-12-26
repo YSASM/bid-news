@@ -61,5 +61,5 @@ if __name__ == "__main__":
     logging.info("start bid-news ....")
     start_service()
     start_watcher()
-    editor.run(debug=True)
+    # editor.run(debug=True)
     

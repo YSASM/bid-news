@@ -47,7 +47,7 @@ class Main(SpiderBase):
                 news.origin_subject = '比地招标网'
                 self.add(news)
                 l-=1
-                time.sleep(2)
+                time.sleep(10)
             except Exception as e:
                 self.send_alarm('error',str(item)+str(e))
         if l<=0:

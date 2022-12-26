@@ -56,12 +56,12 @@ class Main(SpiderBase):
 
         ]
         for info in spider_list:
-            news = News()
             response = requests.post(
                 'https://cis.sohu.com/cisv4/feeds', headers=self.headers, data=info.get("data"))
             data = response.json()
             infos = data.get(info.get("key")).get("data")
             for info in infos:
+                news = News()
                 title = info.get("resourceData").get("contentData").get("title")
                 # 标题
                 news.origin_title = str(title)
@@ -81,4 +81,4 @@ class Main(SpiderBase):
                     self.send_alarm('souhu',str(e))
                     continue
                 self.save(news)
-                time.sleep(10)
+                time.sleep(1)

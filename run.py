@@ -28,6 +28,7 @@ def Editor():
         news.origin_issue_time = request.form['origin_issue_time']
         news.type_name = request.form['type_name']
         news.origin_content = request.form['origin_content']
+        news.type_id = request.form['type_id']
         es = EditorService(news)
         return  es.run()
     else:
@@ -60,5 +61,5 @@ if __name__ == "__main__":
     logging.info("start bid-news ....")
     start_service()
     start_watcher()
-
+    editor.run(debug=True)
     

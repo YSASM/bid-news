@@ -1,1 +1,1 @@
-# from news import 
+from news import news_www_bidizhaobiao_com

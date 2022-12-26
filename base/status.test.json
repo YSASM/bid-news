@@ -1,9 +1,9 @@
 [
     {
         "id": 1,
-        "name": "\u6d4b\u8bd5",
-        "status": 2,
-        "spider": "test",
+        "name": "比地招标网",
+        "status": 1,
+        "spider": "news_www_bidizhaobiao_com",
         "config": "{}",
         "owner": "wujiefeng"
     }

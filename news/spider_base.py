@@ -41,6 +41,7 @@ class SpiderBase(object):
             self.nd = NewsDao()
 
     def add(self, news):
+        news.src_id = self.arg['id'] if self.arg['spider']!='other' else 0
         news = self.add_title_md5(news)
         news.issue_time = self.format_timestamp(news.origin_issue_time)
         news.create_time = int(time.time())
@@ -177,7 +178,11 @@ class SpiderBase(object):
             return (time.strftime("%Y-%m-%d %H:%M:%S"), int(time.time()))
 
     def do(self):
-        self.run()
+        while True:
+            self.run()
+            self.send_alarm('资讯爬取成功','爬取了%d条信息' % self.count)
+            self.count = 0
+            time.sleep(604800)
 
     # retries:错误重连次数
     # pass_status_code:正确status_code会返回'ok',response

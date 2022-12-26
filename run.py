@@ -60,6 +60,5 @@ if __name__ == "__main__":
     logging.info("start bid-news ....")
     start_service()
     start_watcher()
-    editor.run(host='0.0.0.0',port='9260')
 
     

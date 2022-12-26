@@ -1,10 +1,10 @@
 [
     {
-        "id": 1,
-        "name": "比地招标网",
+        "id": 2,
+        "name": "搜狐",
         "status": 1,
-        "spider": "news_www_bidizhaobiao_com",
+        "spider": "news_cis_sohu_com",
         "config": "{}",
-        "owner": "wujiefeng"
+        "owner": "jianghuanhuan"
     }
 ]

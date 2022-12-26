@@ -76,9 +76,7 @@ class Main(SpiderBase):
                 news.type_id = 5
                 try:
                     news.origin_issue_time,news.origin_content = self.get_detail(url=url)
-                except Exception as e:
-                    logging.error('souhu:'+str(e))
-                    self.send_alarm('souhu',str(e))
+                except:
                     continue
                 self.save(news)
                 time.sleep(1)

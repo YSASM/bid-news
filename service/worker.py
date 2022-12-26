@@ -1,4 +1,5 @@
 import logging
+import random
 from threading import Thread
 import time
 import traceback
@@ -33,7 +34,7 @@ class Worker(object):
                 MessageService.send_text('%s 启动'%self.spider, self.owner)
                 logging.info('%s start...' % self.spider)
                 self.start_spider(self.spider,arg)
-            time.sleep(1)
+            time.sleep(random.randint(1,10))
     def start_spider(self,spider,arg):
         try:
             spider = getattr(getattr(news,spider),'Main')(arg)

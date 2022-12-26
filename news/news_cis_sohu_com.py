@@ -79,4 +79,4 @@ class Main(SpiderBase):
                 except:
                     continue
                 self.save(news)
-                time.sleep(1)
+                time.sleep(10)
